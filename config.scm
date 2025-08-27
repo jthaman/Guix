@@ -4,11 +4,12 @@
              (nongnu packages linux)
              (gnu packages xorg)
              (gnu system nss)
+             (gnu services vpn)
              (gnu services desktop)
              (nongnu system linux-initrd)
              (gnu services pm))         ; TLP
 
-(use-service-modules cups desktop networking ssh xorg)
+(use-service-modules cups desktop networking ssh xorg vpn)
 (use-package-modules suckless wm)
 
 (operating-system
