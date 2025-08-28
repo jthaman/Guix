@@ -7,7 +7,6 @@
              (nongnu packages linux)
              (gnu packages xorg)
              (gnu system nss)
-             (gnu services vpn)         ; Maybe not needed
              (gnu services desktop)
              (nongnu system linux-initrd)
              (gnu services pm))         ; TLP
@@ -38,8 +37,7 @@
 ;;; Global packages
  (packages (append (list
                     xmonad
-                    dmenu
-                    wireguard-tools)
+                    dmenu)
                    %base-packages))
 
 ;;; Services
@@ -51,17 +49,12 @@
               (xorg-configuration
                (keyboard-layout keyboard-layout)))
              (service cups-service-type)
-             (simple-service 'wireguard-module
-                             kernel-module-loader-service-type
-                             '("wireguard"))
              (service tlp-service-type
                       (tlp-configuration
                        (cpu-scaling-governor-on-ac (list "performance"))
                        (sched-powersave-on-bat? #t))))
             ;; Common desktop services (dbus, udisks, networking, polkit, etc.)
             %desktop-services))
-
- (kernel-loadable-modules (list wireguard-linux-compat))
 
 ;;; Bootloader
  (bootloader (bootloader-configuration
