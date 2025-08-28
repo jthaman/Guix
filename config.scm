@@ -1,6 +1,9 @@
 ;; Indicate which modules to import to access the variables
 ;; used in this configuration.
+
+;;; Modules
 (use-modules (gnu)
+             (gnu services)
              (nongnu packages linux)
              (gnu packages xorg)
              (gnu system nss)
@@ -12,6 +15,7 @@
 (use-service-modules linux cups desktop networking ssh xorg vpn)
 (use-package-modules linux suckless wm vpn)
 
+;;; OS
 (operating-system
  (kernel linux)
  (initrd microcode-initrd)
@@ -31,14 +35,14 @@
                  '("wheel" "netdev" "audio" "video")))
                %base-user-accounts))
 
- ;; Packages installed system-wide. Not for user packages.
+;;; Global packages
  (packages (append (list
                     xmonad
                     dmenu
                     wireguard-tools)
                    %base-packages))
 
- ;; Services
+;;; Services
  (services (append
             (list
              (service gnome-desktop-service-type)
@@ -59,18 +63,18 @@
 
  (kernel-loadable-modules (list wireguard-linux-compat))
 
- ;; Bootloader
+;;; Bootloader
  (bootloader (bootloader-configuration
               (bootloader grub-bootloader)
               (targets (list "/dev/sda"))
               (keyboard-layout keyboard-layout)))
 
- ;; Swap devices
+;;; Swap devices
  (swap-devices
   (list (swap-space
          (target (uuid "70cb259e-006d-4e69-9f0a-b481e454e083")))))
 
- ;; File systems
+;;; File systems
  (file-systems
   (cons* (file-system
           (mount-point "/")
