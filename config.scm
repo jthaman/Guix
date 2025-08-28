@@ -9,8 +9,8 @@
              (nongnu system linux-initrd)
              (gnu services pm))         ; TLP
 
-(use-service-modules cups desktop networking ssh xorg vpn)
-(use-package-modules suckless wm vpn)
+(use-service-modules linux cups desktop networking ssh xorg vpn)
+(use-package-modules linux suckless wm vpn)
 
 (operating-system
  (kernel linux)
@@ -31,34 +31,33 @@
                  '("wheel" "netdev" "audio" "video")))
                %base-user-accounts))
 
- ;; [[https://guix.gnu.org/cookbook/en/html_node/Connecting-to-Wireguard-VPN.html][Wireguard in Cookbook]]
- (kernel-loadable-modules (list wireguard-linux-compat))
- ;; Packages installed system-wide.
- (packages  (append (list
-                     xmonad
-                     dmenu
-                     wireguard-tools
-                     xterm)
-                    %base-packages))
+ ;; Packages installed system-wide. Not for user packages.
+ (packages (append (list
+                    xmonad
+                    dmenu
+                    wireguard-tools)
+                   %base-packages))
 
  ;; Services
- (services
-  (append
-   (list
-    (service gnome-desktop-service-type)
-    (set-xorg-configuration
-     (xorg-configuration
-      (keyboard-layout keyboard-layout)))
-    (service cups-service-type)
-    (simple-service 'wireguard-module
-                    kernel-module-loader-service-type
-                    '("wireguard"))
-    (service tlp-service-type
-             (tlp-configuration
-              (cpu-scaling-governor-on-ac (list "performance"))
-              (sched-powersave-on-bat? #t))))
-   ;; Common desktop services (dbus, udisks, networking, polkit, etc.)
-   %desktop-services))
+ (services (append
+            (list
+             (service gnome-desktop-service-type)
+             ;; (elogind-service-type)
+             (set-xorg-configuration
+              (xorg-configuration
+               (keyboard-layout keyboard-layout)))
+             (service cups-service-type)
+             (simple-service 'wireguard-module
+                             kernel-module-loader-service-type
+                             '("wireguard"))
+             (service tlp-service-type
+                      (tlp-configuration
+                       (cpu-scaling-governor-on-ac (list "performance"))
+                       (sched-powersave-on-bat? #t))))
+            ;; Common desktop services (dbus, udisks, networking, polkit, etc.)
+            %desktop-services))
+
+ (kernel-loadable-modules (list wireguard-linux-compat))
 
  ;; Bootloader
  (bootloader (bootloader-configuration
