@@ -43,12 +43,27 @@
 ;;; Services
  (services (append
             (list
+;;;;  Gnome
              (service gnome-desktop-service-type)
              ;; (elogind-service-type)
+
+;;;; Get nonguix substitutes.
+             (guix-service-type config =>
+                                (guix-configuration
+                                 (inherit config)
+                                 (substitute-urls
+                                  (append (list "https://substitutes.nonguix.org")
+                                          %default-substitute-urls))
+                                 (authorized-keys
+                                  (append (list (local-file "./nonguix-signing-key.pub"))
+                                          %default-authorized-guix-keys))))
+;;;; For Xmonad
              (set-xorg-configuration
               (xorg-configuration
                (keyboard-layout keyboard-layout)))
+;;;; Printing Management
              (service cups-service-type)
+;;;; Power Managment
              (service tlp-service-type
                       (tlp-configuration
                        (cpu-scaling-governor-on-ac (list "performance"))
